@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue3的中响应式原理</title>
+    <style>
+        body {
+            background: #C7EDCC;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        let person = { name: 'John', age: 18 }
+        // 模拟vue2中的响应式
+        //#region 
+        // let p = {};
+        // Object.defineProperty(p, 'name', {
+        //     get() {
+        //         return person.name;
+        //     },
+        //     set(value) {
+        //         console.log('person 的 name 被更改了， 需要更新UI');
+        //         person.age = value
+        //     }
+        // });
+        // Object.defineProperty(p, 'age', {
+        //     configurable: true,
+        //     get() {
+        //         return person.age;
+        //     },
+        //     set(value) {
+        //         console.log('person 的 age 被更改了， 需要更新UI');
+        //         person.age = value
+        //     }
+        // });
+        //#endregion
+
+        //vue3的响应式
+        const p = new Proxy(person, {
+            // 读取
+            get(target, propName) {
+                console.log('读取');
+                return Reflect.get(target, propName);
+            },
+            // 增加和修改属性
+            set(target, propName, value) {
+                console.log('修改');
+                Reflect.set(target, propName, value);
+            },
+            // 删除
+            deleteProperty(target, propName) {
+                console.log('删除');
+                return Reflect.deleteProperty(target, propName);
+            },
+        });
+
+        // #region 
+        // let obj = { a: 1, b: 2 };
+        // let o = {};
+        // Object.defineProperty(o, 'name', {
+        //     get() {
+        //         return 2;
+        //     },
+
+        // });
+        // Object.defineProperty(o, 'name', {
+        //     get() {
+        //         return 20;
+        //     },
+
+        // });
+        // const x1 = Reflect.defineProperty(obj, 'c', {
+        //     get() { return 10; },
+        // })
+        // const x2 = Reflect.defineProperty(obj, 'c', {
+        //     get() { return 20; },
+        // })
+        // console.log('#', x1, x2);
+        // console.log(Reflect.get(obj, 'a'));
+        //#endregion
+    </script>
+</body>
+
+</html>
