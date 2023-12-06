@@ -3,12 +3,14 @@
   <img alt="Vue logo" src="./assets/person_logo.png">
   <h1>我是App组件</h1>
   <h2>我叫 {{ person.name }}， 我今年{{ person.age }}岁了</h2>
+  <h3 v-show="person.sex">性别： {{ person.sex }}</h3>
   <h3>职位: {{ person.job.type }}</h3>
-  <h3>薪水: {{ person.job.salary }}k</h3>
+  <h3 v-show="person.job.salary">薪水: {{ person.job.salary }}k</h3>
   <h3>爱好： {{ person.hobbies }}</h3>
   <h3>测试数据c: {{ person.a.b.c }}</h3>
   <button @click="changeInfo">修改个人信息</button>
-
+  <button @click="addSex">增加性别</button>
+  <button @click="deleteSalary">删除薪水</button>
 
 
 </template>
@@ -43,11 +45,21 @@ export default {
       person.a.b.c = 666
     }
 
+    function addSex() {
+      person.sex = '男'
+    }
+    function deleteSalary() {
+      delete person.job.salary
+    }
+    
+
 
     //返回一个对象
     return {
       person,
       changeInfo,
+      addSex,
+      deleteSalary,
     }
 
     //返回一个渲染函数
