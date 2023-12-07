@@ -4,19 +4,16 @@
   <hr>
   <button @click="isHide = !isHide">Show/Hide</button>
   <Demo v-if="!isHide"/>
-  <hr>
-  <Test/>
+
 </template>
 
 <script>
 import Demo from './components/Demo';
-import Test from './components/Test';
-
 import { ref,  } from "vue";
 
 export default {
   name: 'App',
-  components: { Demo, Test },
+  components: { Demo,},
   setup() {
     let isHide = ref(false)
 
