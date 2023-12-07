@@ -14,14 +14,17 @@
   <button @click="person.job.j1.salary++">点我涨薪</button>
 </template>
 <script>
-import { ref, reactive, watch, watchEffect } from "vue";
+import { ref, watch } from "vue";
 export default {
   name: "Demo",
   setup(props, context) {
-
+    // console.log(context, context.attrs); //相当于vue2中的$attrs
+    // console.log(context,context.slots); //插槽
+    // console.log(this);
+    console.log(props, context);
     let sum = ref(0);
     let msg = ref("你好");
-    let person = reactive({
+    let person = ref({
       name: "Eason",
       age: 18,
       job: {
@@ -30,22 +33,20 @@ export default {
         },
       },
     });
-    //监测的不是一个值，而是一个保存值的结构(不能写成sum.value) 不能监视一个具体的值注意
-    // watch(sum, (nv, ov) => {
-    //   console.log(`sum: new - [${nv}], old - [${ov}]`);
-    // }, { immediate: true } );
-    
-    //watchEffect
-    //不确定监视对象
-    //默认开启了immediate:true
-    watchEffect(() => {
-      console.log('watchEffecting');
-      //依赖收集,你用到了谁它就监视谁！！
-      //这里用到sum, person.job.j1.salary了,所以可以被监视到(只要它们发生变化就重新执行watchEffect)
-      //与computed有点类似，依赖收集.(侧重点不一致,watchEffect注重过程,而computed注重计算函数的返回值)
-      const x1 = sum.value;
-      const x2 = person.job.j1.salary
-    })
+    watch(sum, (nv, ov) => {
+      console.log(`sum: new - [${nv}], old - [${ov}]`);
+    });
+    //这里如果不是person.value则会出现问题 因为person是一个RefImpl(默认没开启深度监视)
+    //但是person.value是一个借助了proxy生成的reactive响应式对象 所以这里可以解决问题
+    // watch(person.value, (nv, ov) => {
+    //   console.log(`person发生变化了，new: [${JSON.stringify(nv)}], old: [${JSON.stringify(ov)}]`);
+    // });
+
+    //person是RefImpl
+    //开启深度监视不会存在问题
+    watch(person, (nv, ov) => {
+      console.log(`person发生变化了，new: [${JSON.stringify(nv)}], old: [${JSON.stringify(ov)}]`);
+    }, { deep: true});
 
     //返回一个对象
     return {
