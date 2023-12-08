@@ -5,29 +5,21 @@
     <h2>App(祖) {{ name }} {{ price }}W</h2>
     <button @click="name+='~'">换车</button>
     <button @click="price++">换价格</button>
+    <hr>
+    <Child/>
   </div>
 </template>
 
 <script>
-
-import { reactive, ref, toRefs, readonly, isRef, isReactive, isReadonly, isProxy  } from "vue";
+import Child from "./components/Child"
+import { reactive, provide, toRefs  } from "vue";
 
 export default {
   name: 'App',
-  components: {   },
+  components: { Child  },
   setup() {
     let car = reactive({ name: 'BMW', price: 50 });
-    let sum = ref(0)
-    let car1 = readonly(car) ///readonly依然返回代理类型的对象只不过它不能再改而已
-
-    console.log(isRef(sum));
-    console.log(isReactive(car));
-    console.log(isReactive(car1));
-    console.log(isReadonly(car1));
-    console.log(isProxy(car));
-
-
-
+    provide('car', car);//给自己的后代组件递数据 后代都可以
     return {
       ...toRefs(car),
     }
