@@ -1,19 +1,23 @@
 <template>
+  <h2>当前的值为: {{ sum }}</h2>
+  <button @click="sum=666">点我替换</button>
+  <button @click="sum++">点我++</button>
   <!--vue3的组件模版结构可以没有根标签-->
   <h6>当前信息为: {{ person }}</h6>
-  <h1>个人信息</h1>
-  <h2>姓名： {{ name }}</h2>
-  <h2>年龄： {{ age }}</h2>
-  <h2>年薪： {{ salary }}K</h2>
+  <h2>个人信息</h2>
+  <h3>姓名： {{ name }}</h3>
+  <h3>年龄： {{ age }}</h3>
+  <h3>年薪： {{ salary }}K</h3>
   <button @click="name += '~'">点我修改姓名</button>
   <button @click="age += 1">点我修改年龄</button>
   <button @click="salary++">点我涨薪</button>
 </template>
 <script>
-import { reactive, toRef, toRefs } from "vue";
+import { reactive, toRef, toRefs, ref, readonly, shallowReadonly } from "vue";
 export default {
   name: "Demo",
   setup(props, context) {
+    let sum = ref(0)
     let person = reactive({
       name: "Eason",
       age: 18,
@@ -23,24 +27,20 @@ export default {
         },
       },
     });
-    
-    //ref类型的值在模板里使用是不需要.value来取的
-    const name1 = person.name;
-    console.log('@@@', name1);
+    //此时person里面的属性值都不允许修改
+    // person = readonly(person)
+    //第一层不能改(name,age), 但j1和salary仍然可以改动
+    person = shallowReadonly(person)
 
-    //RefImpl 这里的name2与person.name是完全一模一样的(你改这里的name2与你改person.name是一码事),且数据还是响应式的
-    const name2 = toRef(person.name);
-    console.log('###', name2);
-    
+    // sum = readonly(sum);
+    // sum = shallowReadonly(sum)
 
     //返回一个对象
     return {
       person,
-      // name: toRef(person, 'name'),
-      // age: toRef(person, 'age'),
-      // salary: toRef(person.job.j1, 'salary'),
       ...toRefs(person),
       salary: toRef(person.job.j1, 'salary'),
+      sum,
     };
   },
 };
