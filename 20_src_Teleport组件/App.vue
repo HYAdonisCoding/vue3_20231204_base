@@ -4,21 +4,13 @@
   <div class="app">
     <h2>App(祖) </h2>
     <hr>
-    <Suspense>
-      <template v-slot:default>
-        <Child/>
-      </template>
-      <template v-slot:fallback>
-        <h3>Loading...</h3>
-      </template>
-    </Suspense>
+    <Child/>
   </div>
 </template>
 
 <script>
-// import Child from "./components/Child" //静态引入组件
-import { defineAsyncComponent } from 'vue';
-const Child = defineAsyncComponent(() => import("./components/Child"));//动态引入组件(异步)
+import Child from "./components/Child"
+
 export default {
   name: 'App',
   components: { Child  },
